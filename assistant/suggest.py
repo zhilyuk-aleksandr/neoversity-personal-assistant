@@ -11,7 +11,9 @@ LAYOUT = str.maketrans(
 
 
 def similarity(word, name):
-    """Схожість зі всією назвою або з її частиною між дефісами («fnd» ≈ «find»)."""
+    """Схожість зі всією назвою або з її частиною між дефісами («fnd» ≈
+    «find»).
+    """
     parts = [name, *name.split("-")]
     return max(SequenceMatcher(None, word, part).ratio() for part in parts)
 
@@ -26,9 +28,14 @@ def candidates(word, commands, limit=3):
     inside = [name for name in names if word in name]
     if inside:
         return inside[:limit]
-    scored = [(similarity(word, name), index, name) for index, name in enumerate(names)]
-    good = sorted((-score, index, name) for score, index, name in scored if score >= 0.6)
-    # Явний лідер («ad-contact» → add-contact) — одна підказка замість переліку.
+    scored = [
+        (similarity(word, name), index, name)
+        for index, name in enumerate(names)
+    ]
+    good = sorted(
+        (-score, index, name) for score, index, name in scored if score >= 0.6
+    )
+    # Для явного лідера («ad-contact» → add-contact) досить однієї підказки.
     if len(good) > 1 and -good[0][0] >= 0.8 and good[1][0] - good[0][0] >= 0.1:
         good = good[:1]
     return [name for _, _, name in good[:limit]]
@@ -40,10 +47,17 @@ def suggest(word, commands):
     switched = word.casefold().translate(LAYOUT)
     switched = ALIASES.get(switched, switched)
     if switched != word.casefold() and switched in commands:
-        return f"{message} Схоже, увімкнена українська розкладка: ви мали на увазі «{switched}»?"
+        return (
+            f"{message} Схоже, увімкнена українська розкладка: "
+            f"ви мали на увазі «{switched}»?"
+        )
     matches = candidates(word, commands)
     if len(matches) == 1:
         return f"{message} Можливо, ви мали на увазі «{matches[0]}»?"
     if matches:
-        return f"{message} Можливо: " + ", ".join(f"«{name}»" for name in matches) + "."
+        return (
+            f"{message} Можливо: "
+            + ", ".join(f"«{name}»" for name in matches)
+            + "."
+        )
     return f"{message} Введіть help, щоб переглянути команди."

@@ -44,10 +44,17 @@ class Note:
 
     def to_dict(self):
         """Підготувати нотатку до запису у JSON."""
-        return {"title": self.title, "text": self.text, "tags": self.tags.copy()}
+        return {
+            "title": self.title,
+            "text": self.text,
+            "tags": self.tags.copy(),
+        }
 
     def __str__(self):
-        return f"{self.title}\n  {self.text}\n  Теги: {', '.join(self.tags) or '—'}"
+        return (
+            f"{self.title}\n  {self.text}\n"
+            f"  Теги: {', '.join(self.tags) or '—'}"
+        )
 
 
 class NoteBook(UserDict):
@@ -86,10 +93,14 @@ class NoteBook(UserDict):
         return [note for note in self.values() if tag in note.tags]
 
     def groups(self):
-        """Згрупувати за тегами, а нотатки без тегів показати окремо в кінці."""
+        """Згрупувати за тегами, а нотатки без тегів показати окремо в
+        кінці.
+        """
         groups = {}
         untagged = []
-        for note in sorted(self.values(), key=lambda item: item.title.casefold()):
+        for note in sorted(
+            self.values(), key=lambda item: item.title.casefold()
+        ):
             for tag in note.tags:
                 groups.setdefault(tag, []).append(note)
             if not note.tags:

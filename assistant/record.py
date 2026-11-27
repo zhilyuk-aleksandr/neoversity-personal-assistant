@@ -13,7 +13,9 @@ def optional_field(field_type, value):
 class Record:
     """Контакт з іменем, кількома телефонами та необов’язковими полями."""
 
-    def __init__(self, name, phones=(), address=None, email=None, birthday=None):
+    def __init__(
+        self, name, phones=(), address=None, email=None, birthday=None
+    ):
         self.name = Name(name)
         self.address = optional_field(Address, address)
         self.email = optional_field(Email, email)
@@ -63,5 +65,6 @@ class Record:
         phones = ", ".join(map(str, self.phones)) or "—"
         return (
             f"{self.name}\n  Телефони: {phones}\n  Email: {self.email or '—'}"
-            f"\n  Адреса: {self.address or '—'}\n  День народження: {self.birthday or '—'}"
+            f"\n  Адреса: {self.address or '—'}"
+            f"\n  День народження: {self.birthday or '—'}"
         )

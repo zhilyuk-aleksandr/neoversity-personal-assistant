@@ -13,7 +13,9 @@ class AddressBook(UserDict):
 
     @staticmethod
     def _key(name):
-        """Єдиний ключ для імені: casefold — єдина нормалізація ключів книги."""
+        """Єдиний ключ для імені: casefold — єдина нормалізація ключів
+        книги.
+        """
         return str(name).casefold()
 
     def __setitem__(self, name, record):
@@ -66,7 +68,9 @@ class AddressBook(UserDict):
             return
         types = {"email": Email, "address": Address, "birthday": Birthday}
         if field not in types:
-            raise InputError("Виберіть поле name, email, address або birthday.")
+            raise InputError(
+                "Виберіть поле name, email, address або birthday."
+            )
         setattr(record, field, optional_field(types[field], value))
 
     def find(self, query):
@@ -75,8 +79,15 @@ class AddressBook(UserDict):
         digits = re.sub(r"[\s-]", "", query).removeprefix("+38")
         result = []
         for record in self.values():
-            fields = (record.name, record.address, record.email, record.birthday)
-            if any(query in str(field).casefold() for field in fields if field):
+            fields = (
+                record.name,
+                record.address,
+                record.email,
+                record.birthday,
+            )
+            if any(
+                query in str(field).casefold() for field in fields if field
+            ):
                 result.append(record)
             elif digits.isascii() and digits.isdigit():
                 if any(digits in str(phone) for phone in record.phones):
@@ -91,7 +102,9 @@ class AddressBook(UserDict):
         """
         today = today or date.today()
         if type(days) is not int or days < 0:
-            raise InputError("Кількість днів має бути цілим невід’ємним числом.")
+            raise InputError(
+                "Кількість днів має бути цілим невід’ємним числом."
+            )
         try:
             target = today + timedelta(days=days)
         except OverflowError as error:
@@ -111,4 +124,6 @@ class AddressBook(UserDict):
                     matches.append((event, record))
             elif birthday.in_year(target.year) == target:
                 matches.append((target, record))
-        return sorted(matches, key=lambda item: (item[0], str(item[1].name).casefold()))
+        return sorted(
+            matches, key=lambda item: (item[0], str(item[1].name).casefold())
+        )

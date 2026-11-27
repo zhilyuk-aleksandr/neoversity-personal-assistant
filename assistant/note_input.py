@@ -11,7 +11,8 @@ from .notes import clean_tag
 # Кома між іменованими полями є роздільником. Лапки й екрановані символи
 # захищають буквальний текст, наприклад text="Нагадати, tags=приклад".
 FIELD_COMMA = re.compile(
-    r'''("(?:\\.|[^"\\])*"|'[^']*'|\\.)|,(?=\s*(?:text|tags)=)''', re.IGNORECASE
+    r'''("(?:\\.|[^"\\])*"|'[^']*'|\\.)|,(?=\s*(?:text|tags)=)''',
+    re.IGNORECASE,
 )
 
 
@@ -39,7 +40,7 @@ def note_arguments(line):
         value = lexer.get_token()
         if value is None:
             break
-        # У лапках "text=..." і "tags=..." можуть бути текстом або звичайним тегом.
+        # У лапках "text=..." і "tags=..." можуть бути текстом чи тегом.
         raw = line[start:source.tell()].lstrip().casefold()
         if raw.startswith("text="):
             if text is not None:
@@ -49,10 +50,15 @@ def note_arguments(line):
             if tags is not None:
                 raise InputError("Поле tags повторюється.")
             if extra_tags:
-                raise InputError("Вкажіть теги одним списком tags= або окремими аргументами.")
+                raise InputError(
+                    "Вкажіть теги одним списком tags= "
+                    "або окремими аргументами."
+                )
             tags = tag_list(value.partition("=")[2])
         elif tags is not None:
-            raise InputError('Після tags= додатковий текст вказуйте як text="Новий текст".')
+            raise InputError(
+                'Після tags= додатковий текст вказуйте як text="Новий текст".'
+            )
         elif text is None:
             text = value
         else:
@@ -68,9 +74,15 @@ def guided_note(notes, command, args, ask):
     intro = "/cancel скасовує введення.\n"
     tag_prompt = "Теги через кому (Enter — без тегів)"
     if not creating:
-        intro = "Enter залишає попереднє значення. /cancel скасовує введення.\n"
+        intro = (
+            "Enter залишає попереднє значення. /cancel скасовує введення.\n"
+        )
         tag_prompt = "Теги через кому (/clear — очистити)"
-    fields = (("title", "Заголовок"), ("text", "Текст нотатки"), ("tags", tag_prompt))
+    fields = (
+        ("title", "Заголовок"),
+        ("text", "Текст нотатки"),
+        ("tags", tag_prompt),
+    )
     result = []
     initial = args[0] if args else None
     for key, label in fields:
@@ -95,7 +107,11 @@ def guided_note(notes, command, args, ask):
                 elif key == "text":
                     value = required_text(value, "текст нотатки")
                 else:
-                    value = [] if not creating and value == "/clear" else tag_list(value)
+                    value = (
+                        []
+                        if not creating and value == "/clear"
+                        else tag_list(value)
+                    )
             except InputError as error:
                 intro = f"{error}\n"
                 continue
