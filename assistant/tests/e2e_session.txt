@@ -1,0 +1,10 @@
+add-contact "Лада Зоряна" phone="+38 050-123-45-67" email=user@example.com address="вул. Зоряна 2" birthday=29.02.2000
+add-phone "Лада Зоряна" 0507654321
+edit-phone "Лада Зоряна" 0507654321 0500000001
+delete-phone "Лада Зоряна" 0500000001
+find-contact "зоряна"
+add-note "План демо" "Показати збереження даних" навчання
+add-tag "План демо" демо
+find-tag демо
+sort-notes
+exit
