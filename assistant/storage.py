@@ -20,7 +20,11 @@ else:
 def data_directory():
     """Вибрати теку з налаштувань або домашню теку користувача."""
     path = os.environ.get("ASSISTANT_DATA_DIR")
-    return Path(path).expanduser() if path else Path.home() / ".personal_assistant"
+    return (
+        Path(path).expanduser()
+        if path
+        else Path.home() / ".personal_assistant"
+    )
 
 
 @contextmanager
@@ -35,7 +39,9 @@ def session_lock(directory):
             else:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError as error:
-            raise OSError("Тека даних зайнята або недоступна для блокування.") from error
+            raise OSError(
+                "Тека даних зайнята або недоступна для блокування."
+            ) from error
         # Закриття дескриптора звільняє блокування, зокрема після переривання.
         yield
 
@@ -58,7 +64,9 @@ class Storage:
             data = json.loads(raw.decode("utf-8"))
             if not isinstance(data, dict):
                 raise ValueError("Очікується об’єкт JSON.")
-            if not all(isinstance(data[key], list) for key in ("contacts", "notes")):
+            if not all(
+                isinstance(data[key], list) for key in ("contacts", "notes")
+            ):
                 raise ValueError("Очікуються списки контактів і нотаток.")
             for row in data["contacts"]:
                 contacts.add(Record(**row))
@@ -67,12 +75,16 @@ class Storage:
         except (ValueError, KeyError, TypeError, RecursionError):
             backup = self.directory / f"assistant-damaged-{uuid4().hex}.json"
             self.path.rename(backup)
-            warning = f"Файл даних пошкоджено. Оригінал збережено у {backup.name}."
+            warning = (
+                f"Файл даних пошкоджено. Оригінал збережено у {backup.name}."
+            )
             return AddressBook(), NoteBook(), warning
         return contacts, notes, ""
 
     def save(self, contacts, notes):
-        """Записати цілий стан у тимчасовий файл та замінити попередню версію."""
+        """Записати цілий стан у тимчасовий файл та замінити попередню
+        версію.
+        """
         data = {
             "contacts": [record.to_dict() for record in contacts.values()],
             "notes": [note.to_dict() for note in notes.values()],

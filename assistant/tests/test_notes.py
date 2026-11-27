@@ -37,12 +37,18 @@ class NoteTests(unittest.TestCase):
 
     def test_groups(self):
         """Групи впорядковані, а нотатки без тегів ідуть останніми."""
-        self.assertEqual([tag for tag, _ in self.notes.groups()], ["дім", "курс", None])
+        self.assertEqual(
+            [tag for tag, _ in self.notes.groups()], ["дім", "курс", None]
+        )
         self.assertEqual(self.notes.groups()[-1][1][0].title, "Ідея")
 
     def test_invalid_note(self):
         """Порожні поля й дублікати назв відхиляються."""
-        for title, body, tags in (("", "текст", []), ("Тема", " ", []), ("Тема", "текст", [" "])):
+        for title, body, tags in (
+            ("", "текст", []),
+            ("Тема", " ", []),
+            ("Тема", "текст", [" "]),
+        ):
             with self.subTest(title=title), self.assertRaises(InputError):
                 Note(title, body, tags)
         with self.assertRaises(InputError):

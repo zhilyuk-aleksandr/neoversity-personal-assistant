@@ -23,7 +23,13 @@ class ContactTests(unittest.TestCase):
     def test_email(self):
         """Пошта повинна мати коректні частини адреси."""
         self.assertEqual(str(Email(" user@example.com ")), "user@example.com")
-        for raw in ("user@", "@example.com", "a b@example.com", "a@-example.com", "a..b@ex.ua"):
+        for raw in (
+            "user@",
+            "@example.com",
+            "a b@example.com",
+            "a@-example.com",
+            "a..b@ex.ua",
+        ):
             with self.subTest(raw=raw), self.assertRaises(InputError):
                 Email(raw)
 
@@ -52,9 +58,22 @@ class ContactTests(unittest.TestCase):
     def test_contact_search(self):
         """Пошук працює за кожним полем і без урахування регістру."""
         book = AddressBook()
-        record = Record("Лада", ["0501234567"], "вул. Зоряна 2", "user@example.com", "03.04.2000")
+        record = Record(
+            "Лада",
+            ["0501234567"],
+            "вул. Зоряна 2",
+            "user@example.com",
+            "03.04.2000",
+        )
         book.add(record)
-        for query in ("ЛАД", "  +38 050-123  ", "123-45", "ЗОРЯ", "EXAMPLE", "03.04"):
+        for query in (
+            "ЛАД",
+            "  +38 050-123  ",
+            "123-45",
+            "ЗОРЯ",
+            "EXAMPLE",
+            "03.04",
+        ):
             with self.subTest(query=query):
                 self.assertEqual(book.find(query), [record])
         self.assertEqual(book.find("немає"), [])
@@ -85,7 +104,9 @@ class ContactTests(unittest.TestCase):
             book.edit("Лада", "name", "Соня")
         with self.assertRaises(InputError):
             book.edit("Лада", "email", "помилка")
-        self.assertEqual(str(book.get_record("лада").email), "user@example.com")
+        self.assertEqual(
+            str(book.get_record("лада").email), "user@example.com"
+        )
         self.assertEqual(str(book.get_record("лада").name), "Лада")
         self.assertEqual(sorted(book.data), ["лада", "соня"])
 
@@ -111,8 +132,13 @@ class ContactTests(unittest.TestCase):
     def test_record_round_trip(self):
         """Record(**to_dict()) відновлює контакт без втрат."""
         for record in (
-            Record("Лада", ["0501234567", "+38 050-765-43-21"], "вул. Зоряна 2",
-                   "user@example.com", "29.02.2000"),
+            Record(
+                "Лада",
+                ["0501234567", "+38 050-765-43-21"],
+                "вул. Зоряна 2",
+                "user@example.com",
+                "29.02.2000",
+            ),
             Record("Соня"),
         ):
             with self.subTest(name=str(record.name)):
@@ -120,7 +146,13 @@ class ContactTests(unittest.TestCase):
                 self.assertEqual(Record(**data).to_dict(), data)
         self.assertEqual(
             Record("Соня").to_dict(),
-            {"name": "Соня", "phones": [], "address": None, "email": None, "birthday": None},
+            {
+                "name": "Соня",
+                "phones": [],
+                "address": None,
+                "email": None,
+                "birthday": None,
+            },
         )
 
     def test_phones(self):
@@ -133,7 +165,9 @@ class ContactTests(unittest.TestCase):
             record.change_phone("0507654321", "x")
         record.change_phone("0507654321", "0500000001")
         record.delete_phone("+38 050-123-45-67")
-        self.assertEqual([str(phone) for phone in record.phones], ["0500000001"])
+        self.assertEqual(
+            [str(phone) for phone in record.phones], ["0500000001"]
+        )
 
     def test_exact_and_period(self):
         """Через сім днів і протягом тижня дають різні списки."""
@@ -147,7 +181,10 @@ class ContactTests(unittest.TestCase):
         matches = book.birthdays(7, today=today)
         self.assertEqual([str(record.name) for _, record in matches], ["Зоря"])
         matches = book.birthdays(7, within=True, today=today)
-        self.assertEqual([str(record.name) for _, record in matches], ["Соня", "Лада", "Зоря"])
+        self.assertEqual(
+            [str(record.name) for _, record in matches],
+            ["Соня", "Лада", "Зоря"],
+        )
 
     def test_birthdays_rejects_non_integer_days(self):
         """Дробове число, bool та не числа відхиляються, а 0 працює."""
@@ -163,7 +200,13 @@ class ContactTests(unittest.TestCase):
     def test_table_fits_width_with_many_phones(self):
         """Таблиця вкладається в ширину, а картка показує всі номери."""
         phones = ["0501234567", "0507654321", "0500000001", "0500000002"]
-        record = Record("Лада Зоряна", phones, "вул. Зоряна 2, Київ", "user@example.com", "03.04.2000")
+        record = Record(
+            "Лада Зоряна",
+            phones,
+            "вул. Зоряна 2, Київ",
+            "user@example.com",
+            "03.04.2000",
+        )
         for width in (70, 80, 100):
             with self.subTest(width=width):
                 lines = contact_table([record], width=width).splitlines()
@@ -191,7 +234,9 @@ class ContactTests(unittest.TestCase):
         ):
             with self.subTest(today=today):
                 matches = book.birthdays(days, today=today)
-                self.assertEqual([(d, str(r.name)) for d, r in matches], [(target, name)])
+                self.assertEqual(
+                    [(d, str(r.name)) for d, r in matches], [(target, name)]
+                )
 
     def test_period_year_and_leap(self):
         """Період через Новий рік і 29 лютого повертає дати за порядком."""
@@ -201,8 +246,15 @@ class ContactTests(unittest.TestCase):
         book.add(Record("Соня", birthday="31.12.1999"))
         book.add(Record("Тая", birthday="02.01.2000"))
         for today, days, expected in (
-            (date(2026, 12, 30), 3, [("Соня", date(2026, 12, 31)), ("Зоря", date(2027, 1, 1)),
-                                     ("Тая", date(2027, 1, 2))]),
+            (
+                date(2026, 12, 30),
+                3,
+                [
+                    ("Соня", date(2026, 12, 31)),
+                    ("Зоря", date(2027, 1, 1)),
+                    ("Тая", date(2027, 1, 2)),
+                ],
+            ),
             (date(2026, 12, 31), 0, [("Соня", date(2026, 12, 31))]),
             (date(2025, 2, 27), 2, [("Лада", date(2025, 2, 28))]),
             (date(2024, 2, 27), 2, [("Лада", date(2024, 2, 29))]),
@@ -210,4 +262,6 @@ class ContactTests(unittest.TestCase):
         ):
             with self.subTest(today=today, days=days):
                 matches = book.birthdays(days, within=True, today=today)
-                self.assertEqual([(str(r.name), d) for d, r in matches], expected)
+                self.assertEqual(
+                    [(str(r.name), d) for d, r in matches], expected
+                )

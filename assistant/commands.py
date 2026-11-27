@@ -27,7 +27,9 @@ COMMANDS = {
     "add-contact": Command(
         "ІМʼЯ [ТЕЛЕФОН [АДРЕСА]] [ПОЛЕ=ЗНАЧЕННЯ ...]", 1, None, True
     ),
-    "edit-contact": Command("ІМʼЯ ПОЛЕ=ЗНАЧЕННЯ [ПОЛЕ=ЗНАЧЕННЯ ...]", 2, None, True),
+    "edit-contact": Command(
+        "ІМʼЯ ПОЛЕ=ЗНАЧЕННЯ [ПОЛЕ=ЗНАЧЕННЯ ...]", 2, None, True
+    ),
     "delete-contact": Command("ІМʼЯ", 1, 1, True),
     "find-contact": Command("ЗАПИТ", 1, 1),
     "all-contacts": Command("", 0, 0),
@@ -36,7 +38,9 @@ COMMANDS = {
     "delete-phone": Command("ІМʼЯ НОМЕР", 2, 2, True),
     "birthdays": Command("N [--within]", 1, 2),
     "add-note": Command("ЗАГОЛОВОК ТЕКСТ [ТЕГ ...]", 2, None, True),
-    "edit-note": Command("ЗАГОЛОВОК ТЕКСТ [ТЕГ ...] або ЗАГОЛОВОК tags=...", 2, None, True),
+    "edit-note": Command(
+        "ЗАГОЛОВОК ТЕКСТ [ТЕГ ...] або ЗАГОЛОВОК tags=...", 2, None, True
+    ),
     "delete-note": Command("ЗАГОЛОВОК", 1, 1, True),
     "find-note": Command("ЗАПИТ", 1, 1),
     "all-notes": Command("", 0, 0),
@@ -53,14 +57,23 @@ COMMANDS = {
 # Розділ довідки та короткий опис людською мовою.
 DESCRIPTIONS = {
     "add-contact": ("Контакти", "додати контакт (без аргументів — покроково)"),
-    "edit-contact": ("Контакти", "змінити ім’я, адресу, email, день народження"),
+    "edit-contact": (
+        "Контакти",
+        "змінити ім’я, адресу, email, день народження",
+    ),
     "delete-contact": ("Контакти", "видалити контакт (з підтвердженням)"),
-    "find-contact": ("Контакти", "знайти за частиною імені, телефону, email чи адреси"),
+    "find-contact": (
+        "Контакти",
+        "знайти за частиною імені, телефону, email чи адреси",
+    ),
     "all-contacts": ("Контакти", "усі контакти таблицею"),
     "add-phone": ("Контакти", "додати ще один телефон"),
     "edit-phone": ("Контакти", "замінити телефон на новий"),
     "delete-phone": ("Контакти", "видалити телефон"),
-    "birthdays": ("Контакти", "дні народження через N днів (--within — протягом N днів)"),
+    "birthdays": (
+        "Контакти",
+        "дні народження через N днів (--within — протягом N днів)",
+    ),
     "add-note": ("Нотатки", "додати нотатку (без аргументів — покроково)"),
     "edit-note": ("Нотатки", "змінити текст або теги"),
     "delete-note": ("Нотатки", "видалити нотатку (з підтвердженням)"),
@@ -78,17 +91,21 @@ DESCRIPTIONS = {
 
 COMMAND_EXAMPLES = {
     "add-contact": (
-        "Введіть add-contact без аргументів для покрокового введення в терміналі.",
+        "Введіть add-contact без аргументів "
+        "для покрокового введення в терміналі.",
         'add-contact Лада 0501234567 Київ',
-        'add-contact "Олена Демо" phone=0501234567 address="Київ, вул. Сонячна 10"',
+        'add-contact "Олена Демо" phone=0501234567 '
+        'address="Київ, вул. Сонячна 10"',
         "Доступні поля: phone, address, email, birthday.",
     ),
     "edit-contact": (
         'Введіть edit-contact "Олена Демо" для покрокових змін у терміналі.',
-        'edit-contact "Олена Демо" address "Київ, вул. Сонячна 10", email user@example.com',
+        'edit-contact "Олена Демо" address "Київ, вул. Сонячна 10", '
+        'email user@example.com',
         'edit-contact "Олена Демо" email=user@example.com birthday=15.04.1995',
         "Доступні поля: name, phone, address, email, birthday.",
-        "phone додає номер. Щоб замінити конкретний номер, введіть edit-phone.",
+        "phone додає номер. Щоб замінити конкретний номер, "
+        "введіть edit-phone.",
     ),
     "add-note": (
         "Введіть add-note для покрокового створення нотатки в терміналі.",
@@ -101,25 +118,41 @@ COMMAND_EXAMPLES = {
         'edit-note "План демо" tags=демо',
         'Список tags замінює попередні теги. tags="" очищає їх.',
     ),
-    "delete-contact": ('delete-contact "Лада Зоряна"', "Помічник перепитає, чи справді видалити."),
-    "find-contact": ("find-contact зоряна", "find-contact 050123", "find-contact example.com"),
+    "delete-contact": (
+        'delete-contact "Лада Зоряна"',
+        "Помічник перепитає, чи справді видалити.",
+    ),
+    "find-contact": (
+        "find-contact зоряна",
+        "find-contact 050123",
+        "find-contact example.com",
+    ),
     "all-contacts": ("all-contacts",),
     "add-phone": ('add-phone "Лада Зоряна" 0501234567',),
     "edit-phone": ('edit-phone "Лада Зоряна" 0501234567 0507654321',),
     "delete-phone": ('delete-phone "Лада Зоряна" 0507654321',),
     "birthdays": (
         "birthdays 7 — у кого день народження рівно через 7 днів.",
-        "birthdays 7 --within — усі дні народження протягом найближчих 7 днів.",
+        "birthdays 7 --within — усі дні народження "
+        "протягом найближчих 7 днів.",
         "birthdays 0 — сьогоднішні іменинники.",
     ),
-    "delete-note": ('delete-note "План демо"', "Помічник перепитає, чи справді видалити."),
+    "delete-note": (
+        'delete-note "План демо"',
+        "Помічник перепитає, чи справді видалити.",
+    ),
     "find-note": ("find-note слайди",),
     "all-notes": ("all-notes",),
-    "set-tags": ('set-tags "План демо" навчання демо', 'set-tags "План демо" — прибрати всі теги.'),
+    "set-tags": (
+        'set-tags "План демо" навчання демо',
+        'set-tags "План демо" — прибрати всі теги.',
+    ),
     "add-tag": ('add-tag "План демо" захист',),
     "delete-tag": ('delete-tag "План демо" захист',),
     "find-tag": ("find-tag навчання",),
-    "sort-notes": ("sort-notes — групи за тегами, нотатки без тегів наприкінці.",),
+    "sort-notes": (
+        "sort-notes — групи за тегами, нотатки без тегів наприкінці.",
+    ),
     "help": ("help", "help birthdays"),
     "exit": ("exit", "Також Ctrl+D або два Ctrl+C поспіль."),
 }
@@ -145,13 +178,18 @@ YES = {"т", "так", "y", "yes", "д", "да"}
 # лише перед наступним полем: «Київ, вул. Сонячна» залишається однією адресою.
 CONTACT_COMMAS = re.compile(
     r''' "(?:\\.|[^"\\])*" | '[^']*' | \\.
-       | (?P<separator>,) (?= \s* (?: [\w-]+= | (?:name|phone|address|email|birthday)(?:\s|$) ) )
-    ''', re.IGNORECASE | re.VERBOSE,
+       | (?P<separator>,) (?= \s*
+           (?: [\w-]+= | (?:name|phone|address|email|birthday)(?:\s|$) )
+       )
+    ''',
+    re.IGNORECASE | re.VERBOSE,
 )
 
 
 def split_contact_words(line):
-    """Зберегти межі між полями, щоб розпізнати й пропущене перед комою значення."""
+    """Зберегти межі між полями, щоб розпізнати й пропущене перед комою
+    значення.
+    """
     words = []
     start = 0
     for match in CONTACT_COMMAS.finditer(line):
@@ -187,8 +225,13 @@ def help_text(command=None):
             group = section
             lines.append(section)
         lines.append(f"  {name.ljust(width)}{text}")
-    lines.append("Опис і приклади для будь-якої команди: help КОМАНДА, наприклад help add-contact.")
-    lines.append("Назви з пробілами беріть у подвійні лапки. Синоніми: add, new, close.")
+    lines.append(
+        "Опис і приклади для будь-якої команди: help КОМАНДА, "
+        "наприклад help add-contact."
+    )
+    lines.append(
+        "Назви з пробілами беріть у подвійні лапки. Синоніми: add, new, close."
+    )
     return "\n".join(lines)
 
 
@@ -229,7 +272,10 @@ def contact_fields(options, *, creating):
         else:
             short_fields = ()
             if key not in allowed:
-                raise InputError(f"Невідоме поле «{key}». Доступні поля: {', '.join(allowed)}.")
+                raise InputError(
+                    f"Невідоме поле «{key}». "
+                    f"Доступні поля: {', '.join(allowed)}."
+                )
             if not equals:
                 value = next(tokens, None)
                 if value is None:
@@ -244,13 +290,19 @@ def contact_fields(options, *, creating):
 
 
 def guided_contact(contacts, command, args, ask):
-    """Зібрати поля в діалозі, щоб передати їх звичайному обробнику однією командою."""
+    """Зібрати поля в діалозі, щоб передати їх звичайному обробнику
+    однією командою.
+    """
     creating = command == "add-contact"
     record = None
     result = []
     intro = "Enter пропускає поле. /cancel скасовує введення.\n"
     if not creating:
-        name = args[0] if args else ask(intro + "Який контакт редагувати? ").strip()
+        name = (
+            args[0]
+            if args
+            else ask(intro + "Який контакт редагувати? ").strip()
+        )
         if name == "/cancel":
             return "Скасовано."
         record = contacts.get_record(name)
@@ -275,12 +327,18 @@ def guided_contact(contacts, command, args, ask):
                 if key == "name" and value.casefold() in contacts:
                     if contacts.get_record(value) is not record:
                         raise InputError("Контакт із таким іменем уже є.")
-                if key == "phone" and record is not None and field in record.phones:
+                if (
+                    key == "phone"
+                    and record is not None
+                    and field in record.phones
+                ):
                     raise InputError("Такий телефон уже є в контакті.")
             except InputError as error:
                 intro = f"{error}\n"
                 continue
-            result.append(value if creating and key == "name" else f"{key}={value}")
+            result.append(
+                value if creating and key == "name" else f"{key}={value}"
+            )
             break
     if not creating and len(result) == 1:
         return "Змін не внесено."
@@ -319,7 +377,11 @@ class Actions:
     def find_contact(self, query):
         """Показати знайдені контакти."""
         found = self.contacts.find(query)
-        return cards(found) if found else f"За запитом «{query}» контактів не знайдено."
+        return (
+            cards(found)
+            if found
+            else f"За запитом «{query}» контактів не знайдено."
+        )
 
     def all_contacts(self):
         """Показати всі контакти таблицею."""
@@ -345,7 +407,9 @@ class Actions:
         try:
             days = int(count)
         except ValueError as error:
-            raise InputError("Введіть цілу кількість днів від нуля.") from error
+            raise InputError(
+                "Введіть цілу кількість днів від нуля."
+            ) from error
         if mode not in (None, "--within"):
             raise InputError("Для пошуку за періодом використайте --within.")
         within = mode == "--within"
@@ -375,11 +439,19 @@ class Actions:
     def find_note(self, query):
         """Показати нотатки за частиною заголовка або тексту."""
         found = self.notes.find(query)
-        return cards(found) if found else f"За запитом «{query}» нотаток не знайдено."
+        return (
+            cards(found)
+            if found
+            else f"За запитом «{query}» нотаток не знайдено."
+        )
 
     def all_notes(self):
         """Показати всі нотатки."""
-        return cards(self.notes.values()) if self.notes else "Нотаток ще немає. Додайте першу: add-note"
+        return (
+            cards(self.notes.values())
+            if self.notes
+            else "Нотаток ще немає. Додайте першу: add-note"
+        )
 
     def set_tags(self, title, *tags):
         """Замінити весь список тегів."""
@@ -405,7 +477,10 @@ class Actions:
         """Показати заголовки нотаток, згруповані за тегами."""
         lines = []
         for tag, notes in self.notes.groups():
-            lines.append(f"{tag or '(без тегів)'}: " + ", ".join(note.title for note in notes))
+            lines.append(
+                f"{tag or '(без тегів)'}: "
+                + ", ".join(note.title for note in notes)
+            )
         return "\n".join(lines) or "Нотаток ще немає. Додайте першу: add-note"
 
 
@@ -419,11 +494,15 @@ class Session:
 
     @input_error
     def execute(self, line, *, ask=None):
-        """Перевірити команду, виконати її та повернути відповідь користувачеві."""
+        """Перевірити команду, виконати її та повернути відповідь
+        користувачеві.
+        """
         try:
             words = shlex.split(line)
         except ValueError as error:
-            raise InputError("Перевірте парність лапок і завершення рядка.") from error
+            raise InputError(
+                "Перевірте парність лапок і завершення рядка."
+            ) from error
         if not words:
             return ""
         name = words[0].casefold()
@@ -435,7 +514,8 @@ class Session:
         spec = COMMANDS[name]
         args = words[1:]
         if ask is not None and (
-            (name == "add-contact" and not args) or (name == "edit-contact" and len(args) <= 1)
+            (name == "add-contact" and not args)
+            or (name == "edit-contact" and len(args) <= 1)
         ):
             args = guided_contact(self.actions.contacts, name, args, ask)
         elif name in ("add-note", "edit-note"):
@@ -445,14 +525,20 @@ class Session:
                 args = guided_note(self.actions.notes, name, args, ask)
         if isinstance(args, str):
             return args
-        if ask is not None and name in ARGUMENT_PROMPTS and len(args) < spec.minimum:
+        if (
+            ask is not None
+            and name in ARGUMENT_PROMPTS
+            and len(args) < spec.minimum
+        ):
             args = list(args)
             for label in ARGUMENT_PROMPTS[name][len(args):spec.minimum]:
                 value = ask(f"{label}: ").strip()
                 if not value or value == "/cancel":
                     return "Скасовано."
                 args.append(value)
-        if len(args) < spec.minimum or (spec.maximum is not None and len(args) > spec.maximum):
+        if len(args) < spec.minimum or (
+            spec.maximum is not None and len(args) > spec.maximum
+        ):
             raise InputError(f"Формат: {name} {spec.syntax}".rstrip())
         if name == "help":
             return help_text(*args)
@@ -461,12 +547,15 @@ class Session:
             return ""
         if ask is not None and name in ("delete-contact", "delete-note"):
             if name == "delete-contact":
-                what = f"контакт «{self.actions.contacts.get_record(args[0]).name}»"
+                record = self.actions.contacts.get_record(args[0])
+                what = f"контакт «{record.name}»"
             else:
-                what = f"нотатку «{self.actions.notes.get_note(args[0]).title}»"
+                what = (
+                    f"нотатку «{self.actions.notes.get_note(args[0]).title}»"
+                )
             if ask(f"Видалити {what}? (т/Н): ").strip().casefold() not in YES:
                 return "Скасовано, нічого не видалено."
-        # Копія ізолює незбережені зміни, якщо запис на диск завершиться помилкою.
+        # Копія зберігає попередній стан на випадок помилки запису.
         actions = deepcopy(self.actions) if spec.writes else self.actions
         handler = getattr(actions, name.replace("-", "_"))
         reply = handler(*args)

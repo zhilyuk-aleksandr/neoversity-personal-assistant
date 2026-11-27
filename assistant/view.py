@@ -1,9 +1,19 @@
-"""Вигляд відповідей у терміналі: таблиця контактів і дні народження людською мовою."""
+"""Вигляд відповідей у терміналі: таблиця контактів і дні народження
+людською мовою.
+"""
 
 import shutil
 from datetime import date
 
-WEEKDAYS = ("понеділок", "вівторок", "середа", "четвер", "пʼятниця", "субота", "неділя")
+WEEKDAYS = (
+    "понеділок",
+    "вівторок",
+    "середа",
+    "четвер",
+    "пʼятниця",
+    "субота",
+    "неділя",
+)
 
 
 def plural(number, one, few, many):
@@ -31,21 +41,33 @@ def when(day, today):
 
 
 def birthday_lines(matches, days, within, today=None):
-    """Заголовок і рядок на кожен контакт: дата, день тижня, скільки чекати, вік."""
+    """Заголовок і рядок на кожен контакт: дата, день тижня, скільки
+    чекати, вік.
+    """
     today = today or date.today()
     if not matches:
-        period = f"у найближчі {days_word(days)}" if within else f"через {days_word(days)}"
+        period = (
+            f"у найближчі {days_word(days)}"
+            if within
+            else f"через {days_word(days)}"
+        )
         return f"Днів народження {period} немає."
     if within:
         lines = [f"Дні народження в найближчі {days_word(days)}:"]
     else:
         day = matches[0][0]
-        lines = [f"{when(day, today).capitalize()} ({day:%d.%m}, {WEEKDAYS[day.weekday()]}):"]
+        lines = [
+            f"{when(day, today).capitalize()} "
+            f"({day:%d.%m}, {WEEKDAYS[day.weekday()]}):"
+        ]
     for day, record in matches:
         age = day.year - record.birthday.date.year
         turns = f"виповнюється {age} {plural(age, 'рік', 'роки', 'років')}"
         if within:
-            lines.append(f"  {day:%d.%m} {WEEKDAYS[day.weekday()]:<9} · {when(day, today):<13} · {record.name} — {turns}")
+            lines.append(
+                f"  {day:%d.%m} {WEEKDAYS[day.weekday()]:<9} · "
+                f"{when(day, today):<13} · {record.name} — {turns}"
+            )
         else:
             lines.append(f"  {record.name} — {turns}")
     return "\n".join(lines)
@@ -56,7 +78,9 @@ def _cut(text, width):
 
 
 def _phones_text(phones, width):
-    """Номери, що вміщаються в колонку: решту замінює «+N», повний список — у картці."""
+    """Номери, що вміщаються в колонку: решту замінює «+N», повний
+    список — у картці.
+    """
     text = ", ".join(map(str, phones)) or "—"
     if len(text) <= width or len(phones) < 2:
         return text
@@ -85,21 +109,35 @@ def contact_table(records, width=None):
         for record in records
     ]
     widths = [
-        max(len(head[i]), *(len(_phones_text(row[i], 10**9) if i == 1 else row[i]) for row in rows))
+        max(
+            len(head[i]),
+            *(
+                len(_phones_text(row[i], 10**9) if i == 1 else row[i])
+                for row in rows
+            ),
+        )
         for i in range(len(head))
     ]
-    phones_min = max(len(head[1]), *(len(_phones_text(row[1], 0)) for row in rows))
+    phones_min = max(
+        len(head[1]), *(len(_phones_text(row[1], 0)) for row in rows)
+    )
     gap = 2
-    # Якщо не вміщається, спершу стискаємо адресу, потім email, телефони й ім'я.
+    # Спершу стискаємо адресу, потім email, телефони й ім’я.
     for column, minimum in ((4, 8), (2, 10), (1, phones_min), (0, 10)):
         excess = sum(widths) + gap * (len(widths) - 1) - width
         if excess <= 0:
             break
         widths[column] = max(minimum, widths[column] - excess)
-    rows = [(row[0], _phones_text(row[1], widths[1]), *row[2:]) for row in rows]
+    rows = [
+        (row[0], _phones_text(row[1], widths[1]), *row[2:]) for row in rows
+    ]
 
     def line(cells):
-        return (" " * gap).join(_cut(cell, w).ljust(w) for cell, w in zip(cells, widths)).rstrip()
+        return (
+            (" " * gap)
+            .join(_cut(cell, w).ljust(w) for cell, w in zip(cells, widths))
+            .rstrip()
+        )
 
     out = [line(head), (" " * gap).join("─" * w for w in widths)]
     out.extend(line(row) for row in rows)

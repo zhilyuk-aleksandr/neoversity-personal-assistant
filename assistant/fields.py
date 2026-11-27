@@ -15,7 +15,9 @@ def required_text(value, label):
     try:
         value.encode("utf-8")
     except UnicodeEncodeError as error:
-        raise InputError(f"Поле «{label}» містить пошкоджений символ.") from error
+        raise InputError(
+            f"Поле «{label}» містить пошкоджений символ."
+        ) from error
     return value.strip()
 
 
